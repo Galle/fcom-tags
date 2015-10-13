@@ -3,20 +3,16 @@ class fcom_tags_widget extends WP_Widget {
 
 	// constructor
 	function fcom_tags_widget() {
-		parent::WP_Widget(false, $name = __('Fcom - Mapa de entradas', 'fcom_tags_widget') );
+		parent::__construct(false, $name = __('Fcom - Mapa de entradas', 'fcom_tags_widget') );
 	}
 
 	// widget form creation
 	function form($instance) {	
         // Check values
         if( $instance) {
-             $title = esc_attr($instance['title']);
-             $text = esc_attr($instance['text']);
-             $textarea = esc_textarea($instance['textarea']);
+             //$title = esc_attr($instance['title']);
         } else {
-             $title = '';
-             $text = '';
-             $textarea = '';
+             //$title = '';
         }
         ?>
 
@@ -41,38 +37,14 @@ class fcom_tags_widget extends WP_Widget {
     function update($new_instance, $old_instance) {
           $instance = $old_instance;
           // Fields
+          /*
           $instance['title'] = strip_tags($new_instance['title']);
-          $instance['text'] = strip_tags($new_instance['text']);
-          $instance['textarea'] = strip_tags($new_instance['textarea']);
+          */
          return $instance;
     }
 
 	// widget display
     function widget($args, $instance) {
-       /*extract( $args );
-       // these are the widget options
-       $title = apply_filters('widget_title', $instance['title']);
-       $text = $instance['text'];
-       $textarea = $instance['textarea'];
-       echo $before_widget;
-       // Display the widget
-       echo '<div class="widget-text wp_widget_plugin_box">';
-
-       // Check if title is set
-       if ( $title ) {
-          echo $before_title . $title . $after_title;
-       }
-
-       // Check if text is set
-       if( $text ) {
-          echo '<p class="wp_widget_plugin_text">'.$text.'</p>';
-       }
-       // Check if textarea is set
-       if( $textarea ) {
-         echo '<p class="wp_widget_plugin_textarea">'.$textarea.'</p>';
-       }
-       echo '</div>';
-       echo $after_widget;*/
        echo $before_widget;
        ?>
        <div class="leaflet-control-container">

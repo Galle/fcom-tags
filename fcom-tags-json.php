@@ -1,42 +1,4 @@
 <?
-/*register_activation_hook( __FILE__, 'myfcom_tags_plugin_activation');
-
-function fcom_tags_plugin_activation()
-{
-   fcom_tags_json_rewrite();
-   flush_rewrite_rules(false);
-}
-
-function fcom_tags_json_rewrite() {
-    add_rewrite_rule( 'fcom-tags/json/data(.*)\.php', 'index.php?json=$matches[1]', 'top' );
-}
-add_action( 'init', 'fcom_tags_json_rewrite' );
-
-function fcom_tags_filter_query_vars( $query_vars ) {
-    $query_vars[] = 'fcom-tags/json/data';
-
-    return $query_vars;
-}
-add_filter( 'query_vars', 'fcom_tags_filter_query_vars' );
-
-function fcom_tags_template_include( $template ) {
-    global $wp_query;
-
-    // You could normally swap out the template WP wants to use here, but we'll just die
-    if ( isset( $wp_query->query_vars['fcom-tags/json/data'] ) && ! is_page() && ! is_single() ) {
-        $wp_query->is_404 = false;
-        $wp_query->is_archive = true;
-        $wp_query->is_category = true;
-        $cats = array( 'Hobbes', 'Simba', 'Grumpy Cat' );
-        header( 'Content-Type: application/json' );
-        die( json_encode( $cats ) );
-    } else {
-        return $template;
-    }
-}
-add_filter( 'template_include', 'fcom_tags_template_include' );
-*/
-
 
 add_action( 'pre_get_posts', function ($query ){
     global $wp;
@@ -75,7 +37,6 @@ add_action( 'pre_get_posts', function ($query ){
 	                )
 	                ");
 	                
-            
             $nodos_array = array();
             $tag_id= array();
             $tag_index = 0;
@@ -140,11 +101,11 @@ add_action( 'pre_get_posts', function ($query ){
                     $fuerzas_temp = array();
                     
                     $post_tags = get_tags();
-                    foreach($tags as $tag)
+                    foreach($post_tags as $tag)
                     {
-                        if (array_key_exists($tag->getId(),$tag_id))
+                        if (array_key_exists($tag->term_id,$tag_id))
                         {
-                            foreach($tag_id[$tag->getId()] as $semitag)
+                            foreach($tag_id[$tag->term_id] as $semitag)
                             {
                                 $fuerzas_temp[] = array('nodo' => $semitag['index'], 'grupo' => $semitag['grupo']);
                                 if(array_key_exists($semitag['grupo'],$grupo_count))
@@ -159,11 +120,16 @@ add_action( 'pre_get_posts', function ($query ){
                             }
                         }
                     }
-                    $grupo_tag = array_keys($grupo_count, max($grupo_count));
-                    arsort($grupo_count);
-                    $keys = array_keys($grupo_count);
-                    $grupo_diff= $grupo_count[$keys[0]] - $grupo_count[$keys[1]];
                     
+                    $grupo_tag = 0;
+                    $grupo_diff= 0;
+                    if(count($grupo_count)>1)
+                    {
+                        $grupo_tag = array_keys($grupo_count, max($grupo_count));
+                        arsort($grupo_count);
+                        $keys = array_keys($grupo_count);
+                        $grupo_diff= $grupo_count[$keys[0]] - $grupo_count[$keys[1]];
+                    }
                     
                     //crea el nodo
                     $nodos_array[] = array(
@@ -176,9 +142,10 @@ add_action( 'pre_get_posts', function ($query ){
                         'fuerzas' => $fuerzas_temp,
                         'titulo' => get_the_title(), 
                         //'bajada' => get_the_excerpt(),
-                        //'img_path' => $articulo->getWebPath(),
+                        //'img_path' => $articulo->getWebPath()
+                        'path' => get_permalink(),
                         'grupo_tag' => $grupo_tag,
-                        'grupo_weight' => 1.1+$grupo_diff/count($tags),
+                        'grupo_weight' => 1.1+$grupo_diff/(count($post_tags)+1),
                         'fecha' => array('dia' => get_the_time('d'), 'mes'=> get_the_time('M'), 'agno' => get_the_time('Y'))
                         );
                     $tag_index++;
@@ -191,11 +158,9 @@ add_action( 'pre_get_posts', function ($query ){
             }   
             wp_reset_query();
             $retorno = array("nodes"=>$nodos_array,"links"=>$links_array);
-	        
-            $results = $wpdb->get_results( 'SELECT * FROM '.$table_name.'');
+            wp_send_json($retorno);
+            //echo json_encode($retorno,true);
             
-            
-            echo json_encode($retorno,true);
             wp_die();
             
             exit;

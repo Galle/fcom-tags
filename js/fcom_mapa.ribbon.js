@@ -155,7 +155,9 @@ d3.json('fcom-tags/json/data', function(error, graph) {
           //.attr("width", 325)
           //.attr("height", 400)
           .attr("points", poly)
-          .style("fill", "#397BDE");
+          .attr("xlink:href", function(d){return d.path;}) 
+          .style("fill", "#397BDE")
+          ;
   //Foto
   /*node_a
           .append("rect")
@@ -219,6 +221,7 @@ d3.json('fcom-tags/json/data', function(error, graph) {
             
         }
     })
+    .attr("xlink:href", function(d){return d.path;})
     ;
   //Fecha        
   /*node_a
@@ -399,7 +402,7 @@ d3.json('fcom-tags/json/data', function(error, graph) {
     });
         
         force.start();
-            },3000);
+            },1000);
     
     
 });

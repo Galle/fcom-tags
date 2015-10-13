@@ -145,6 +145,7 @@ d3.json('fcom-tags/json/data', function(error, graph) {
           .attr("width", 325)
           .attr("height", 400)
           .style("fill", "#876");
+          //.attr("xlink:href",function(d){return d.path});;
   //Foto
   node_a
           .append("rect")

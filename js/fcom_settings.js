@@ -6,11 +6,7 @@ jQuery(document).ready(function($) {
 	    };
 	    // We can also pass the url value separately from ajaxurl for front end AJAX implementations
 	    jQuery.post(ajax_object.ajax_url, data, function(response) {
-		    $('#all-tag-select').find('option').remove().end();
-		    $('#child-tag-select').find('option').remove().end();
-		    var options = eval('(' + response + ')');
-		    options['tags'].forEach(function(item){$('#all-tag-select').append('<option value='+item['term_id']+'>'+item['name']+'</option>');})
-		    options['child_tags'].forEach(function(item){$('#child-tag-select').append('<option value='+item['term_id']+'>'+item['name']+'</option>');})
+		    selectUpdate(response);
 	    });
 	});
 
@@ -22,11 +18,7 @@ $('#tag-select').on('change',
 	    };
 	    // We can also pass the url value separately from ajaxurl for front end AJAX implementations
 	    jQuery.post(ajax_object.ajax_url, data, function(response) {
-		    $('#all-tag-select').find('option').remove().end();
-		    $('#child-tag-select').find('option').remove().end();
-		    var options = eval('(' + response + ')');
-		    options['tags'].forEach(function(item){$('#all-tag-select').append('<option value='+item['term_id']+'>'+item['name']+'</option>');})
-		    options['child_tags'].forEach(function(item){$('#child-tag-select').append('<option value='+item['term_id']+'>'+item['name']+'</option>');})
+		    selectUpdate(response);
 	    });
     }
 );
@@ -40,13 +32,8 @@ $('#move-right').on('click',function(){
 		'move-tags': seleccionados    // We pass php values differently!
 	    };
     jQuery.post(ajax_object.ajax_url, data, function(response) {
-        $('#all-tag-select').find('option').remove().end();
-	    $('#child-tag-select').find('option').remove().end();
-	    var options = eval('(' + response + ')');
-	    options['tags'].forEach(function(item){$('#all-tag-select').append('<option value='+item['term_id']+'>'+item['name']+'</option>');})
-	    options['child_tags'].forEach(function(item){$('#child-tag-select').append('<option value='+item['term_id']+'>'+item['name']+'</option>');})
+        selectUpdate(response);
     });
-    
 });
 
 $('#move-left').on('click',function(){
@@ -58,11 +45,15 @@ $('#move-left').on('click',function(){
 		'move-tags': seleccionados    // We pass php values differently!
 	    };
     jQuery.post(ajax_object.ajax_url, data, function(response) {
-        $('#all-tag-select').find('option').remove().end();
-	    $('#child-tag-select').find('option').remove().end();
-	    var options = eval('(' + response + ')');
-	    options['tags'].forEach(function(item){$('#all-tag-select').append('<option value='+item['term_id']+'>'+item['name']+'</option>');})
-	    options['child_tags'].forEach(function(item){$('#child-tag-select').append('<option value='+item['term_id']+'>'+item['name']+'</option>');})
+        selectUpdate(response);
     });
-    
 });
+
+
+function selectUpdate(response){
+    $('#all-tag-select').find('option').remove().end();
+    $('#child-tag-select').find('option').remove().end();
+    var options = eval('(' + response + ')');
+    options['tags'].forEach(function(item){$('#all-tag-select').append('<option value='+item['term_id']+'>'+item['name']+'</option>');})
+    options['child_tags'].forEach(function(item){$('#child-tag-select').append('<option value='+item['term_id']+'>'+item['name']+'</option>');})
+}
