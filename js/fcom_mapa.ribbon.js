@@ -133,6 +133,8 @@ d3.json('fcom-tags/json/data', function(error, graph) {
     .enter().append("g")
       .attr("class", function(d) { return "node-a "+d.medioClass;})
       .attr("transform", function(d) { return "translate("+d.x+","+d.y+")"; })
+      .append("a")
+          .attr("xlink:href", function(d){return d.path;})
       //.call(force.drag)
       ;
   // Caja completa 
@@ -155,7 +157,6 @@ d3.json('fcom-tags/json/data', function(error, graph) {
           //.attr("width", 325)
           //.attr("height", 400)
           .attr("points", poly)
-          .attr("xlink:href", function(d){return d.path;}) 
           .style("fill", "#397BDE")
           ;
   //Foto
