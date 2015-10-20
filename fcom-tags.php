@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 global $fcom_tags_db_version;
 $fcom_tags_db_version = '1.0';
 
-//include( plugin_dir_path( __FILE__ ) . 'fcom-tags-widget.php');
+include( plugin_dir_path( __FILE__ ) . 'fcom-tags-widget.php');
 include( plugin_dir_path( __FILE__ ) . 'fcom-tags-json.php');
 include( plugin_dir_path( __FILE__ ) . 'fcom-tags-admin-page.php');
 
@@ -26,12 +26,12 @@ function fcom_tags_install() {
 	global $wpdb;
 	global $fcom_tags_db_version;
 
-	$table_name = $wpdb->prefix . 'fcom_tag_relations';
-	$terms_table_name = $wpdb->prefix. 'terms';
+	$table_name = $wpdb->prefix.'fcom_tag_relations';
+	$terms_table_name = $wpdb->prefix.'terms';
 	
 	$charset_collate = $wpdb->get_charset_collate();
 
-	$sql = "CREATE TABLE $table_name (
+	$sql = "CREATE TABLE IF NOT EXISTS $table_name (
 		tag_id bigint(20) UNSIGNED NOT NULL,
 		tag_padre_id bigint(20) UNSIGNED NOT NULL,
 		FOREIGN KEY (tag_id) REFERENCES $terms_table_name(term_id),
@@ -49,7 +49,7 @@ add_action( 'pre_delete_term', 'fcom_remove_tags',10,2 );
 function fcom_remove_tags($term,$taxonomy) {
     global $wpdb;
     
-    $table_name = $wpdb->prefix . 'fcom_tag_relations';
+    $table_name = $wpdb->prefix.'fcom_tag_relations';
     
     if ($taxonomy == 'post_tag')
     {
