@@ -1,19 +1,18 @@
 <?
 /*
 
-<?
+<?php
     wp_enqueue_style('fcom-tags-controls-css', plugins_url('fcom-tags/css/fcom_controls.css'));
     wp_enqueue_style('fcom-tags-mapa-css', plugins_url('fcom-tags/css/fcom_mapa.css'));
     wp_enqueue_script('jquery-js', plugins_url('fcom-tags/js/jquery-2.1.4.min.js'));
     wp_enqueue_script('d3-js', plugins_url('fcom-tags/js/d3.min.js'));
 ?>
 <div id="fcom-mapa" style="width:930px;height:500px;"></div>
-<?
+<?php
     wp_enqueue_script('fcom-tags-mapa-js', plugins_url('fcom-tags/js/fcom_mapa.ribbon.js'),null,null,true);
 ?>
 
 */
-
 class fcom_tags_widget extends WP_Widget {
 
 	// constructor
@@ -96,7 +95,7 @@ class fcom_tags_widget extends WP_Widget {
         </div>
         </div>
         <div id="fcom-mapa" style="width:930px;height:500px;"></div>
-        <?
+        <?php
         wp_enqueue_script('fcom-tags-mapa-js', plugins_url('/js/fcom_mapa.ribbon.js', __FILE__));
        
     }

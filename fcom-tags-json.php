@@ -1,4 +1,4 @@
-<?
+<?php
 
 add_action( 'pre_get_posts', function ($query ){
     global $wp;
@@ -159,8 +159,7 @@ add_action( 'pre_get_posts', function ($query ){
             wp_reset_query();
             $retorno = array("nodes"=>$nodos_array,"links"=>$links_array);
             wp_send_json($retorno);
-            //echo json_encode($retorno,true);
-            
+           
             wp_die();
             
             exit;

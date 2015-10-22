@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Plugin Name: Fcom Tag plugin
 Plugin URI:  http://

@@ -1,8 +1,7 @@
-<?
+<?php
 /*
     Menu para wp-admin
 */
-
 add_action('admin_menu', 'fcom_tags_plugin_menu');
 function fcom_tags_plugin_menu() {
 	add_menu_page('Fcom Tag Settings', 'Fcom Tag Settings', 'manage_categories', 'fcom-tags-settings.php', 'fcom_tags_settings_page', 'dashicons-tag');
@@ -71,10 +70,6 @@ function fcom_tags_settings_page() {
                     <td style="width:40%">
                     <?php
                         echo '<select multiple name="all-tags" id="all-tag-select" style="width:80%">';
-                        foreach ($all_tags as $tag)
-                        {
-                            echo '<option value="'.$tag->term_id.'">'.$tag->name.'</option>';
-                        }
                         echo '</select>';
 
                     ?>
@@ -86,23 +81,15 @@ function fcom_tags_settings_page() {
                     <td style="width:40%">
                     <?php
                         echo '<select multiple name="all-tags" id="child-tag-select" style="width:80%">';
-                        /*foreach ($all_tags as $tag)
-                        {
-                            echo '<option value="'.$tag->term_id.'">'.$tag->name.'</option>';
-                        }
-                        echo '</select>';*/
+                        echo '</select>';
                     ?>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <?//php submit_button(); ?>
-        
-        
-
         </form>
     </div>
-    <?
+    <?php
 }
 
 add_action( 'wp_ajax_fcom_tags_select', 'fcom_tags_select_callback' );
