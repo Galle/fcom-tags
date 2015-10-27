@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 global $fcom_tags_db_version;
 $fcom_tags_db_version = '1.0';
 
-include( plugin_dir_path( __FILE__ ) . 'fcom-tags-widget.php');
+//include( plugin_dir_path( __FILE__ ) . 'fcom-tags-widget.php');
 include( plugin_dir_path( __FILE__ ) . 'fcom-tags-json.php');
 include( plugin_dir_path( __FILE__ ) . 'fcom-tags-admin-page.php');
 

@@ -48,7 +48,89 @@ var container = svg.append("g");
 var defaultZoom = 0.1;
 zoom.scale(defaultZoom);
 zoom.event(svg.transition().duration(500));
+
+//***********************************************************
+// PAN-ZOOM CONTROL - FUNCTIONAL STYLE
+//***********************************************************
+var makePanZoomCTRL = function(id, width, height) {
+var control = {}
+
+var zoomMin = -9, // Levels of Zoom Out
+    zoomMax =  10, // Levels of Zoom In
+    zoomCur =   -9, // Current Zoom
+    offsetX =   width/2, // Current X Offset (Pan)
+    offsetY =   height/2; // Current Y Offset (Pan)
+
+var transform = function () {
+  var x = -((width  * zoomCur / 10) / 2)  + offsetX;
+  var y = -((height * zoomCur / 10) / 2)  + offsetY;
+  var s = (zoomCur / 10) + 1;
     
+  /*d3.select(id).transition().duration(750)
+    .attr("transform", "translate(" + x + " " + y + ") scale(" + s + ")");*/
+  zoom.translate([x,y]);
+  zoom.scale(s);
+  zoom.event(svg.transition().duration(50));
+
+};
+
+control.pan = function (btnID) {
+  offsetX = zoom.translate()[0]+width*zoomCur/20;
+  offsetY = zoom.translate()[1]+height*zoomCur/20;
+  
+  if (btnID === "panLeft") {
+    offsetX += 50;
+  } else if (btnID === "panRight") {
+    offsetX -= 50;
+  } else if (btnID === "panUp") {
+    offsetY += 50;
+  } else if (btnID === "panDown") { 
+    offsetY -= 50;
+  }
+  transform();
+};
+
+control.zoom = function (btnID) {
+  zoomCur = zoom.scale()*10-10;
+  if (btnID === "zoomIn") {
+    if (zoomCur >= zoomMax) return;
+    zoomCur++;
+  } else if (btnID === "zoomOut") {
+    if (zoomCur <= zoomMin) return;
+    zoomCur--;
+  }
+  transform();
+};
+return control;
+}
+
+//***********************************************************
+// INSTANTIATE PAN-ZOOM CONTROL (CREATE INSTANCE)
+//***********************************************************
+var panZoom = makePanZoomCTRL('#svg-container', width, height);
+
+//***********************************************************
+// SET BUTTON EVENT LISTENERS
+//***********************************************************
+d3.selectAll("#zoomIn, #zoomOut")
+.on("click", function () {
+  d3.event.preventDefault();
+  var id = d3.select(this).attr("id");
+  panZoom.zoom(id);
+});
+
+d3.selectAll("#panLeft, #panRight, #panUp, #panDown")
+.on("click", function () {
+  d3.event.preventDefault();
+  var id = d3.select(this).attr("id");
+  panZoom.pan(id);
+});
+
+
+//
+//
+//
+   
 d3.json('fcom-tags/json/data', function(error, graph) {
   if (error) throw error;
 
@@ -403,7 +485,7 @@ d3.json('fcom-tags/json/data', function(error, graph) {
     });
         
         force.start();
-            },1000);
+            },500);
     
     
 });
@@ -491,79 +573,4 @@ function wordwrap(text, max) {
     return lines
 }
 
-//***********************************************************
-// PAN-ZOOM CONTROL - FUNCTIONAL STYLE
-//***********************************************************
-var makePanZoomCTRL = function(id, width, height) {
-var control = {}
 
-var zoomMin = -9, // Levels of Zoom Out
-    zoomMax =  10, // Levels of Zoom In
-    zoomCur =   -9, // Current Zoom
-    offsetX =   width/2, // Current X Offset (Pan)
-    offsetY =   height/2; // Current Y Offset (Pan)
-
-var transform = function () {
-  var x = -((width  * zoomCur / 10) / 2)  + offsetX;
-  var y = -((height * zoomCur / 10) / 2)  + offsetY;
-  var s = (zoomCur / 10) + 1;
-    
-  /*d3.select(id).transition().duration(750)
-    .attr("transform", "translate(" + x + " " + y + ") scale(" + s + ")");*/
-  zoom.translate([x,y]);
-  zoom.scale(s);
-  zoom.event(svg.transition().duration(500));
-
-};
-
-control.pan = function (btnID) {
-  offsetX = zoom.translate()[0]+width*zoomCur/20;
-  offsetY = zoom.translate()[1]+height*zoomCur/20;
-  
-  if (btnID === "panLeft") {
-    offsetX += 50;
-  } else if (btnID === "panRight") {
-    offsetX -= 50;
-  } else if (btnID === "panUp") {
-    offsetY += 50;
-  } else if (btnID === "panDown") { 
-    offsetY -= 50;
-  }
-  transform();
-};
-
-control.zoom = function (btnID) {
-  zoomCur = zoom.scale()*10-10;
-  if (btnID === "zoomIn") {
-    if (zoomCur >= zoomMax) return;
-    zoomCur++;
-  } else if (btnID === "zoomOut") {
-    if (zoomCur <= zoomMin) return;
-    zoomCur--;
-  }
-  transform();
-};
-return control;
-}
-
-//***********************************************************
-// INSTANTIATE PAN-ZOOM CONTROL (CREATE INSTANCE)
-//***********************************************************
-var panZoom = makePanZoomCTRL('#svg-container', width, height);
-
-//***********************************************************
-// SET BUTTON EVENT LISTENERS
-//***********************************************************
-d3.selectAll("#zoomIn, #zoomOut")
-.on("click", function () {
-  d3.event.preventDefault();
-  var id = d3.select(this).attr("id");
-  panZoom.zoom(id);
-});
-
-d3.selectAll("#panLeft, #panRight, #panUp, #panDown")
-.on("click", function () {
-  d3.event.preventDefault();
-  var id = d3.select(this).attr("id");
-  panZoom.pan(id);
-});
