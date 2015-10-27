@@ -172,6 +172,10 @@ function fcom_tags_recursive_node(&$tag_id, &$links_array, &$tag_index, &$nodos_
 {
     global $wpdb;
     
+    $table_name = $wpdb->prefix . 'fcom_tag_relations';
+    $terms_table_name = $wpdb->prefix. 'terms';
+    $term_table = $wpdb->prefix.'term_taxonomy';
+    
     $tag_padre = $tag_index;
     $nodos_array[] = array("name"=>$tag->name,"group"=>$grupo, 'classname' => 'tag', 'fuerzas' => array());
     $tag_id[$tag->term_id][] = array('index'=>$tag_index,'grupo'=>$grupo);
