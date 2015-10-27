@@ -2,20 +2,9 @@ var margin = {top: -5, right: -5, bottom: -5, left: -5},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom,
     padding = 5;
-/*if (window.innerWidth*2/3 > width)
-{
-    width = window.innerWidth*2/3;
-    $('#mapa-fcom').css('width',width+'px');
-}
-if (window.innerHeight*2/3 > height)
-{
-    height = window.innerHeight*2/3;
-    $('#mapa-fcom').css('height',height+'px');
-}
-*/
 
 var zoom = d3.behavior.zoom()
-    .scaleExtent([0.1, 2])
+    .scaleExtent([0.1, 1.5])
     .translate([width / 2, height / 2])
     .on("zoom", zoomed);
 
@@ -35,7 +24,8 @@ var svg = d3.select("#fcom-mapa").append("svg")
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.right + ")")
     .attr("id", "svg-container")
-    .call(zoom);
+    //.call(zoom)
+    ;
     
 var rect = svg.append("rect")
     .attr("width", width)
@@ -45,92 +35,10 @@ var rect = svg.append("rect")
     
 var container = svg.append("g");
 
-var defaultZoom = 0.1;
+var defaultZoom = 0.3;
 zoom.scale(defaultZoom);
 zoom.event(svg.transition().duration(500));
-
-//***********************************************************
-// PAN-ZOOM CONTROL - FUNCTIONAL STYLE
-//***********************************************************
-var makePanZoomCTRL = function(id, width, height) {
-var control = {}
-
-var zoomMin = -9, // Levels of Zoom Out
-    zoomMax =  10, // Levels of Zoom In
-    zoomCur =   -9, // Current Zoom
-    offsetX =   width/2, // Current X Offset (Pan)
-    offsetY =   height/2; // Current Y Offset (Pan)
-
-var transform = function () {
-  var x = -((width  * zoomCur / 10) / 2)  + offsetX;
-  var y = -((height * zoomCur / 10) / 2)  + offsetY;
-  var s = (zoomCur / 10) + 1;
     
-  /*d3.select(id).transition().duration(750)
-    .attr("transform", "translate(" + x + " " + y + ") scale(" + s + ")");*/
-  zoom.translate([x,y]);
-  zoom.scale(s);
-  zoom.event(svg.transition().duration(50));
-
-};
-
-control.pan = function (btnID) {
-  offsetX = zoom.translate()[0]+width*zoomCur/20;
-  offsetY = zoom.translate()[1]+height*zoomCur/20;
-  
-  if (btnID === "panLeft") {
-    offsetX += 50;
-  } else if (btnID === "panRight") {
-    offsetX -= 50;
-  } else if (btnID === "panUp") {
-    offsetY += 50;
-  } else if (btnID === "panDown") { 
-    offsetY -= 50;
-  }
-  transform();
-};
-
-control.zoom = function (btnID) {
-  zoomCur = zoom.scale()*10-10;
-  if (btnID === "zoomIn") {
-    if (zoomCur >= zoomMax) return;
-    zoomCur++;
-  } else if (btnID === "zoomOut") {
-    if (zoomCur <= zoomMin) return;
-    zoomCur--;
-  }
-  transform();
-};
-return control;
-}
-
-//***********************************************************
-// INSTANTIATE PAN-ZOOM CONTROL (CREATE INSTANCE)
-//***********************************************************
-var panZoom = makePanZoomCTRL('#svg-container', width, height);
-
-//***********************************************************
-// SET BUTTON EVENT LISTENERS
-//***********************************************************
-d3.selectAll("#zoomIn, #zoomOut")
-.on("click", function () {
-  d3.event.preventDefault();
-  var id = d3.select(this).attr("id");
-  panZoom.zoom(id);
-});
-
-d3.selectAll("#panLeft, #panRight, #panUp, #panDown")
-.on("click", function () {
-  d3.event.preventDefault();
-  var id = d3.select(this).attr("id");
-  panZoom.pan(id);
-});
-
-
-//
-//
-//
-   
 d3.json('fcom-tags/json/data', function(error, graph) {
   if (error) throw error;
 
@@ -140,7 +48,7 @@ d3.json('fcom-tags/json/data', function(error, graph) {
       .start()
     .friction(0.6)
     .linkDistance(0)
-    .gravity(0.005)
+    .gravity(0.04)
     .theta(0.8)
     .alpha(0.1);
     //.start();
@@ -220,59 +128,15 @@ d3.json('fcom-tags/json/data', function(error, graph) {
       //.call(force.drag)
       ;
   // Caja completa 
-  /*poly = "-82,-36 82,-36 82,6 66,37 -82,37" ;
-     
-  node_a
-          .append("polygon")
-          .attr("x",-82)
-          .attr('y',-36)          
-          //.attr("width", 325)
-          //.attr("height", 400)
-          .attr("points", poly)
-          .style("fill", "#397BDE");
-  */
   poly = "-164,-73 164,-73 164,12 132,73 -164,73" ;
   node_a
           .append("polygon")
           .attr("x",-164)
           .attr('y',-73)          
-          //.attr("width", 325)
-          //.attr("height", 400)
           .attr("points", poly)
           .style("fill", "#397BDE")
           ;
-  //Foto
-  /*node_a
-          .append("rect")
-          .attr("rx", 5)
-          .attr("ry", 5)
-          .attr("x", -127)
-          .attr("y", -61)
-          .attr("width", 254)
-          .attr("height", 122)
-          .style("fill", "#000");
-  node_a
-          .append("image")
-          .attr("rx", 5)
-          .attr("ry", 5)
-          .attr("x", -127)
-          .attr("y", -61)
-          .attr("width", 254)
-          .attr("height", 122)
-          .attr("xlink:href",function(d){return d.img_path});
-  */
   //Titulo  
-  /*node_a
-          .append("text")
-          .attr("x", -140)
-          .attr("y", -168)
-          .attr("width", 280)
-          .attr("height", 92)
-          .style("fill", "#000")
-          .text(function(d){ return d.titulo; })
-          .attr("font-family", "sans-serif")
-          .attr("font-size", "18px")
-          ;*/
   node_a
     .append("text")
     .attr("x",-66)
@@ -282,13 +146,6 @@ d3.json('fcom-tags/json/data', function(error, graph) {
     .attr("font-size", "24px")
     .style("color", "white")
     .style("fill", "white")
-    /*.each(function (d) {
-        var lines = wordwrap(d.titulo, 16)
-
-        for (var i = 0; i < lines.length; i++) {
-            d3.select(this).append("tspan").attr("dy",20).attr("x",-77).text(lines[i])
-        }
-    })*/
     .each(function (d) {
         var lines = wordwrap(d.titulo, 16)
 
@@ -307,17 +164,6 @@ d3.json('fcom-tags/json/data', function(error, graph) {
     .attr("xlink:href", function(d){return d.path;})
     ;
   //Fecha        
-  /*node_a
-          .append("text")
-          .attr("x", 34)
-          .attr("y", -189)
-          .attr("width", 106)
-          .attr("height", 16)
-          .style("fill", "#000")
-          .text(function(d){ return d.fecha; })
-          .attr("font-family", "sans-serif")
-          .attr("font-size", "11px")
-          ;*/
   //Día
   node_a
           .append("text")
@@ -357,34 +203,6 @@ d3.json('fcom-tags/json/data', function(error, graph) {
           .attr("font-family", "sans-serif")
           .attr("font-size", "24px")
           ;
-  
-  //Bajada        
-  /*node_a
-          .append("text")
-          .attr("x", -140)
-          .attr("y", 83)
-          .attr("width", 254)
-          .attr("height", 122)
-          .style("fill", "#000")
-          .text(function(d){ return d.bajada; })
-          .attr("font-family", "sans-serif")
-          .attr("font-size", "11px")
-          ;*/
-  /*node_a
-          .append("text")
-          .attr("x", -140)
-          .attr("y", 83)
-          .attr("text-anchor", "left")
-          .style("fill", "#000")
-          .attr("font-family", "sans-serif")
-          .attr("font-size", "11px")
-          .each(function (d) {
-                var lines = wordwrap(d.bajada, 45)
-
-                for (var i = 0; i < lines.length; i++) {
-                    d3.select(this).append("tspan").attr("dy",15).attr("x",-140).text(lines[i])
-                }
-           });*/
 
   node_p.append("title")
       .text(function(d) { return d.name; });
@@ -510,11 +328,6 @@ function dragended(d) {
 function collide(alpha) {
   var quadtree = d3.geom.quadtree(nodes);
   return function(d) {
-    /*var nx1 = d.x - (82+padding),
-        nx2 = d.x + (82+padding),
-        ny1 = d.y - (36+padding),
-        ny2 = d.y + (37+padding),
-        ancho = 82+padding, alto = 36+padding;*/
     
     var nx1 = d.x - (164+padding),
         nx2 = d.x + (164+padding),
@@ -573,4 +386,79 @@ function wordwrap(text, max) {
     return lines
 }
 
+//***********************************************************
+// PAN-ZOOM CONTROL - FUNCTIONAL STYLE
+//***********************************************************
+var makePanZoomCTRL = function(id, width, height) {
+var control = {}
 
+var zoomMin = -9, // Levels of Zoom Out
+    zoomMax =  5, // Levels of Zoom In
+    zoomCur =   -7, // Current Zoom
+    offsetX =   width/2, // Current X Offset (Pan)
+    offsetY =   height/2; // Current Y Offset (Pan)
+
+var transform = function () {
+  var x = -((width  * zoomCur / 10) / 2)  + offsetX;
+  var y = -((height * zoomCur / 10) / 2)  + offsetY;
+  var s = (zoomCur / 10) + 1;
+    
+  /*d3.select(id).transition().duration(750)
+    .attr("transform", "translate(" + x + " " + y + ") scale(" + s + ")");*/
+  zoom.translate([x,y]);
+  zoom.scale(s);
+  zoom.event(svg.transition().duration(100));
+
+};
+
+control.pan = function (btnID) {
+  offsetX = zoom.translate()[0]+width*zoomCur/20;
+  offsetY = zoom.translate()[1]+height*zoomCur/20;
+  
+  if (btnID === "panLeft") {
+    offsetX += 50;
+  } else if (btnID === "panRight") {
+    offsetX -= 50;
+  } else if (btnID === "panUp") {
+    offsetY += 50;
+  } else if (btnID === "panDown") { 
+    offsetY -= 50;
+  }
+  transform();
+};
+
+control.zoom = function (btnID) {
+  zoomCur = zoom.scale()*10-10;
+  if (btnID === "zoomIn") {
+    if (zoomCur >= zoomMax) return;
+    zoomCur++;
+  } else if (btnID === "zoomOut") {
+    if (zoomCur <= zoomMin) return;
+    zoomCur--;
+  }
+  transform();
+};
+return control;
+}
+
+//***********************************************************
+// INSTANTIATE PAN-ZOOM CONTROL (CREATE INSTANCE)
+//***********************************************************
+var panZoom = makePanZoomCTRL('#svg-container', width, height);
+
+//***********************************************************
+// SET BUTTON EVENT LISTENERS
+//***********************************************************
+d3.selectAll("#zoomIn, #zoomOut")
+.on("click", function () {
+  d3.event.preventDefault();
+  var id = d3.select(this).attr("id");
+  panZoom.zoom(id);
+});
+
+d3.selectAll("#panLeft, #panRight, #panUp, #panDown")
+.on("click", function () {
+  d3.event.preventDefault();
+  var id = d3.select(this).attr("id");
+  panZoom.pan(id);
+});
