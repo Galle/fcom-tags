@@ -4,7 +4,7 @@ var margin = {top: -5, right: -5, bottom: -5, left: -5},
     padding = 5;
 
 var zoom = d3.behavior.zoom()
-    .scaleExtent([0.1, 2])
+    .scaleExtent([0.1, 1.5])
     .translate([width / 2, height / 2])
     .on("zoom", zoomed);
 
@@ -24,7 +24,8 @@ var svg = d3.select("#fcom-mapa").append("svg")
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.right + ")")
     .attr("id", "svg-container")
-    .call(zoom);
+    //.call(zoom)
+    ;
     
 var rect = svg.append("rect")
     .attr("width", width)
@@ -392,8 +393,8 @@ var makePanZoomCTRL = function(id, width, height) {
 var control = {}
 
 var zoomMin = -9, // Levels of Zoom Out
-    zoomMax =  10, // Levels of Zoom In
-    zoomCur =   -9, // Current Zoom
+    zoomMax =  5, // Levels of Zoom In
+    zoomCur =   -7, // Current Zoom
     offsetX =   width/2, // Current X Offset (Pan)
     offsetY =   height/2; // Current Y Offset (Pan)
 
